@@ -1,0 +1,37 @@
+name: Deploy site from public folder # Nome do seu fluxo de trabalho
+
+on:
+  # O fluxo de trabalho rodará sempre que houver um push para o branch 'main'
+  push:
+    branches: ["main"]
+
+  # Permite que você execute este fluxo de trabalho manualmente na aba Actions
+  workflow_dispatch:
+
+# Permissões necessárias para que o GitHub Pages funcione
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # O trabalho de compilação e upload dos arquivos
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout # 1. Baixa o código do seu repositório
+        uses: actions/checkout@v4
+
+      - name: Setup Pages # 2. Configura o ambiente do GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact from public folder # 3. FAZ O UPLOAD da pasta 'public'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Define que a pasta a ser publicada é 'public'
+          path: 'public' 
+
+      - name: Deploy to GitHub Pages # 4. Implementa o artefato
+        id: deployment
+        uses: actions/deploy-pages@v4
